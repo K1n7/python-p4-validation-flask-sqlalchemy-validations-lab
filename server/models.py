@@ -11,7 +11,17 @@ class Author(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    # Add validators 
+        @validates('name')
+    def validate_name(self, key, value):
+        if not value:
+            raise ValueError("Author must have a name.")
+        return value
+
+    @validates('phone_number')
+    def validate_phone(self, key, value):
+        if len(value) != 10 or not value.isdigit():
+            raise ValueError("Phone number must be exactly 10 digits.")
+        return value
 
     def __repr__(self):
         return f'Author(id={self.id}, name={self.name})'
